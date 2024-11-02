@@ -1,0 +1,62 @@
+name: cloud run preview
+
+
+on: pull_request
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Inject keys
+        run: echo -en '${{ secrets.KEYS_YAML_TESTS }}' >> keys.yaml
+
+      - name: Authenticate GCP
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          
+      - name: Build Docker image
+        run: |
+          docker build -t techbuzz-backend .
+          
+      - name: Push Docker image to GCP Container Registry
+        run: |
+          gcloud auth configure-docker
+          docker tag techbuzz-backend gcr.io/the-tech-buzz/techbuzz-backend:pr-preview-${{ github.event.number }}
+          docker push gcr.io/the-tech-buzz/techbuzz-backend:pr-preview-${{ github.event.number }}
+  preview:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ needs.build.result == 'success' }}
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Authenticate GCP
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: 'google-github-actions/deploy-cloudrun@v1'
+        with:
+          service: 'techbuzz-backend'
+          image: gcr.io/the-tech-buzz/techbuzz-backend:pr-preview-${{ github.event.number }}
+          tag: pr-preview-${{ github.event.number }}
+          flags: '--min-instances=0 --cpu=1 --memory=2Gi --timeout=10m --allow-unauthenticated --no-cpu-throttling --cpu-boost'
+          no_traffic: true
+
+      - name: Comment deployment
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            A preview of this pull request has been deployed (or updated) at ${{ steps.deploy.outputs.url }}. 
+          reactions: eyes, rocket
