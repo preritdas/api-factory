@@ -13,4 +13,4 @@ RUN pip install -U pip wheel && \
 COPY . .
 
 # Run the API
-CMD exec fastapi run api --port :${PORT:-8000}
+CMD exec fastapi run api --port ${PORT:-8000}
