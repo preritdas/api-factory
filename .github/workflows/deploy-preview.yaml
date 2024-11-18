@@ -27,8 +27,8 @@ jobs:
       - name: Push Docker image to GCP Container Registry
         run: |
           gcloud auth configure-docker
-          docker tag CONTAINER_NAME gcr.io/PROJECT_NAME/CONTAINER_NAME:pr-preview-${{ github.event.number }}
-          docker push gcr.io/PROJECT_NAME/CONTAINER_NAME:pr-preview-${{ github.event.number }}
+          docker tag CONTAINER_NAME gcr.io/GCP_PROJECT/CONTAINER_NAME:pr-preview-${{ github.event.number }}
+          docker push gcr.io/GCP_PROJECT/CONTAINER_NAME:pr-preview-${{ github.event.number }}
   preview:
     runs-on: ubuntu-latest
     needs: build
@@ -49,7 +49,7 @@ jobs:
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
           service: 'CONTAINER_NAME'
-          image: gcr.io/PROJECT_NAME/CONTAINER_NAME:pr-preview-${{ github.event.number }}
+          image: gcr.io/GCP_PROJECT/CONTAINER_NAME:pr-preview-${{ github.event.number }}
           tag: pr-preview-${{ github.event.number }}
           flags: '--min-instances=0 --allow-unauthenticated'
           no_traffic: true
