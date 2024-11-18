@@ -24,7 +24,7 @@ jobs:
         run: |
           docker build -t CONTAINER_NAME .
           
-      - name: Push Docker image to GCP Container Registry
+      - name: Push Docker image to GCP Artifact Registry
         run: |
           gcloud auth configure-docker
           docker tag CONTAINER_NAME gcr.io/GCP_PROJECT/CONTAINER_NAME:pr-preview-${{ github.event.number }}
