@@ -46,3 +46,17 @@ To access keys throughout your API:
    ```python
    api_key = KEYS.Provider.api_key
    ```
+
+## Running
+
+```bash
+fastapi run api --app app
+```
+
+Where `api` is the module and `app` is the variable name of the FastAPI application object. To run with multiple workers:
+
+```bash
+fastapi run api --app app --workers 4
+```
+
+The number of workers should be $(2* numcores) + 1$. Don't include vCPUs in the calculation of $numcores$. So use 5 workers for a 2 CPU cores deployment. 
