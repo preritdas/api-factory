@@ -1,6 +1,6 @@
-```md
 [![tests](https://github.com/ORGANIZATION/REPO/actions/workflows/tests.yaml/badge.svg)](https://github.com/ORGANIZATION/REPO/actions/workflows/tests.yaml)
-```
+[![cloud run deployment](https://github.com/ORGANIZATION/REPO/actions/workflows/google-cloud.yaml/badge.svg)](https://github.com/ORGANIZATION/REPO/actions/workflows/google-cloud.yaml)
+
 
 # FastAPI Factory
 
