@@ -13,6 +13,7 @@ A factory for a FastAPI application.
    - `:%s/CONTAINER_NAME/NEW_NAME/g` and `:%s/GCP_PROJECT/NEW_NAME/g`
    - Google Cloud setup: Create a service account with permissions Service Account User, Cloud Run Admin, Storage Admin, Artifact Registry Admin, and Artifact Registry Create-on-Push Admin.
 3. Add secrets to GitHub Actions: `KEYS_YAML` and `KEYS_YAML_TESTS`. The first is for the main branch, the second is for pull requests. These follow the same format. Also add `GCP_SA_KEY` to the secrets.
+4. Once a few cloud deployments have gone through, you may have to manually update traffic in the Cloud Run UI to the latest revision. 
 
 ## Keys Structure
 
