@@ -4,7 +4,7 @@
 
 # FastAPI Factory
 
-A factory for a FastAPI application. Comes with credential management, routers, a test suite, CI/CD, production/QA pipelines, logging (including instrumentation to see all route traffic), and a containerized development environment. 
+A factory for a FastAPI application. Comes with credential management, global configuration, routers, a test suite, CI/CD, production/QA pipelines, logging (including instrumentation to see all route traffic), and a containerized development environment. 
 
 ## Setup
 
