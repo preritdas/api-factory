@@ -48,11 +48,11 @@ jobs:
         id: deploy
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
-          service: 'CONTAINER_NAME'
+          service: 'CONTAINER_NAME-qa'
           image: gcr.io/GCP_PROJECT/CONTAINER_NAME:pr-preview-${{ github.event.number }}
           tag: pr-preview-${{ github.event.number }}
+          region: us-central1
           flags: '--min-instances=0 --allow-unauthenticated'
-          no_traffic: true
 
       - name: Comment deployment
         uses: thollander/actions-comment-pull-request@v3

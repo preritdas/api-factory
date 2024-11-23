@@ -58,5 +58,8 @@ jobs:
         with:
           service: CONTAINER_NAME
           image: gcr.io/GCP_PROJECT/CONTAINER_NAME
+          region: us-central1
           flags: '--min-instances=0 --allow-unauthenticated'
-          no_traffic: false
+
+      - name: Update traffic to latest revision
+        run: gcloud run services update-traffic CONTAINER_NAME --to-latest --region us-central1
