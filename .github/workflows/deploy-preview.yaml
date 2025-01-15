@@ -22,13 +22,13 @@ jobs:
           
       - name: Build Docker image
         run: |
-          docker build -t CONTAINER_NAME .
+          docker build -t CONTAINER_NAME-preview .
           
       - name: Push Docker image to GCP Artifact Registry
         run: |
           gcloud auth configure-docker
-          docker tag CONTAINER_NAME gcr.io/GCP_PROJECT/CONTAINER_NAME:pr-preview-${{ github.event.number }}
-          docker push gcr.io/GCP_PROJECT/CONTAINER_NAME:pr-preview-${{ github.event.number }}
+          docker tag CONTAINER_NAME-preview gcr.io/GCP_PROJECT/CONTAINER_NAME-preview:pr-preview-${{ github.event.number }}
+          docker push gcr.io/GCP_PROJECT/CONTAINER_NAME-preview:pr-preview-${{ github.event.number }}
   preview:
     runs-on: ubuntu-latest
     needs: build
@@ -48,8 +48,8 @@ jobs:
         id: deploy
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
-          service: 'CONTAINER_NAME-qa'
-          image: gcr.io/GCP_PROJECT/CONTAINER_NAME:pr-preview-${{ github.event.number }}
+          service: 'CONTAINER_NAME-preview'
+          image: gcr.io/GCP_PROJECT/CONTAINER_NAME-preview:pr-preview-${{ github.event.number }}
           tag: pr-preview-${{ github.event.number }}
           region: us-central1
           flags: '--min-instances=0 --allow-unauthenticated'
