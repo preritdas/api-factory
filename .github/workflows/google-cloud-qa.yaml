@@ -59,7 +59,7 @@ jobs:
           service: CONTAINER_NAME-qa
           image: gcr.io/real-intent/CONTAINER_NAME-qa
           region: us-central1
-          flags: '--min-instances=0 --allow-unauthenticated --cpu=1 --memory=2Gi'
+          flags: '--min-instances=0 --allow-unauthenticated'
 
       - name: Update traffic to latest revision
         run: gcloud run services update-traffic CONTAINER_NAME-qa --to-latest --region us-central1
