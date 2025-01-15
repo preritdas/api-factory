@@ -1,0 +1,65 @@
+name: cloud run qa
+
+
+on:
+  workflow_run:
+    workflows:
+      - tests
+    types:
+      - completed
+    branches:
+      - main
+      - master
+  workflow_dispatch: 
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Inject keys
+        run: echo -en '${{ secrets.KEYS_YAML_TESTS }}' >> keys.yaml
+
+      - name: Authenticate GCP
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          
+      - name: Remove tests directory
+        run: rm -r tests
+      
+      - name: Build Docker image
+        run: |
+          docker build -t CONTAINER_NAME-qa .
+          
+      - name: Push Docker image to GCP Artifact Registry
+        run: |
+          gcloud auth configure-docker
+          docker tag CONTAINER_NAME-qa gcr.io/real-intent/CONTAINER_NAME-qa
+          docker push gcr.io/real-intent/CONTAINER_NAME-qa
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ needs.build.result == 'success' }}
+
+    steps:
+      - name: Authenticate GCP
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          
+      - name: Deploy to Cloud Run
+        uses: 'google-github-actions/deploy-cloudrun@v2'
+        with:
+          service: CONTAINER_NAME-qa
+          image: gcr.io/real-intent/CONTAINER_NAME-qa
+          region: us-central1
+          flags: '--min-instances=0 --allow-unauthenticated --cpu=1 --memory=2Gi'
+
+      - name: Update traffic to latest revision
+        run: gcloud run services update-traffic CONTAINER_NAME-qa --to-latest --region us-central1
