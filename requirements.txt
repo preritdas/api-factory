@@ -1,4 +1,4 @@
 # API
-fastapi[standard]==0.119.0
-pydantic==2.12.3
-logfire[fastapi]==4.13.2
+fastapi[standard]>=0.119.0
+pydantic>=2.12.3
+logfire[fastapi]>=4.13.2
