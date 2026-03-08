@@ -3,6 +3,7 @@ venv
 .DS_Store
 .ipynb_checkpoints
 
+.env
 keys.yaml
 keys_tests.yaml
 
