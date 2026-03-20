@@ -2,6 +2,10 @@ FROM python:3.14.3-bookworm
 
 WORKDIR /app
 
+# Python venv
+RUN python -m venv .venv
+ENV PATH="/app/.venv/bin/python:$PATH"
+
 # Copy just requirements to build dependencies 
 COPY requirements.txt .
 
