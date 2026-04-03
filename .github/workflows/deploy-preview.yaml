@@ -52,7 +52,7 @@ jobs:
           image: gcr.io/GCP_PROJECT/CONTAINER_NAME-preview:pr-preview-${{ github.event.pull_request.number }}
           tag: pr-preview-${{ github.event.pull_request.number }}
           region: us-central1
-          flags: '--min-instances=0 --allow-unauthenticated'
+          flags: '--min-instances=0 --allow-unauthenticated --no-invoker-iam-check'
 
       - name: Comment deployment
         uses: thollander/actions-comment-pull-request@v3
